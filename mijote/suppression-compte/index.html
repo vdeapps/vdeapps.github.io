@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src https: http://127.0.0.1:55321 http://localhost:55321; base-uri 'none'; form-action 'none'">
+<meta name="supabase-url" content="https://newakwkubtfsndhbyvcq.supabase.co">
+<meta name="supabase-anon" content="sb_publishable_BGqnc9Ql3_QskhVqj0uD9g_3MeHURpQ">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supprimer mon compte Mijote</title>
+<style>
+  :root { --encre:#1f1a17; --papier:#fbf6ec; --tomate:#d9432b; --safran:#f2a516; --trait:#e4dccb; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--papier); color:var(--encre); font:18px/1.55 Figtree, system-ui, sans-serif; }
+  main { max-width:36rem; margin:0 auto; padding:2rem 1rem 4rem; }
+  h1 { font:700 2rem/1.15 "Bricolage Grotesque", Figtree, system-ui, sans-serif; margin:0 0 1rem; }
+  section { background:#fff; border:1px solid var(--trait); border-radius:16px; padding:1.25rem; margin:1.25rem 0; }
+  label { display:block; font-weight:600; margin:.75rem 0 .25rem; }
+  input { width:100%; min-height:48px; padding:.5rem .75rem; font:inherit; border:2px solid var(--encre); border-radius:12px; background:#fff; }
+  button { min-height:48px; margin-top:1rem; padding:.5rem 1.25rem; font:inherit; font-weight:700; border:0; border-radius:999px; background:var(--encre); color:#fff; cursor:pointer; }
+  button.danger { background:var(--tomate); }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+  :focus-visible { outline:3px solid var(--safran); outline-offset:2px; }
+  [role=status] { margin-top:1rem; font-weight:600; }
+  [hidden] { display:none; }
+  a { color:var(--tomate); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Supprimer votre compte Mijote</h1>
+  <p>Mijote est un carnet de recettes pour Android, édité par un particulier, à titre non professionnel. Vous pouvez supprimer votre compte depuis l'application (Profil, puis Supprimer mon compte) ou depuis cette page, sans réinstaller l'application.</p>
+
+  <section aria-labelledby="effets">
+    <h2 id="effets">Ce qui sera supprimé</h2>
+    <ul>
+      <li>Votre compte : adresse e-mail, mot de passe, nom et photo de profil.</li>
+      <li>Toutes vos recettes, avec leurs photos, leurs étiquettes et vos favoris, corbeille comprise.</li>
+      <li>Votre réglage d'analyse en ligne et son compteur.</li>
+    </ul>
+    <p>La suppression est définitive : pensez à exporter vos recettes avant (dans l'application, Profil, puis Exporter mes recettes). Vos données sont effacées aussitôt ; les fichiers photo le sont au plus tard dans les deux nuits qui suivent.</p>
+    <h2 id="conserve">Ce qui est conservé</h2>
+    <p>Seuls les journaux techniques et les sauvegardes de notre hébergeur gardent une trace de votre compte, jusqu'à leur expiration, au plus tard 7 jours après.</p>
+    <p>Une question ? Écrivez à <a href="mailto:vdeapps@gmail.com">vdeapps@gmail.com</a>. Détails dans notre <a href="../confidentialite/">politique de confidentialité</a>.</p>
+  </section>
+
+  <section id="etape-connexion" aria-labelledby="t1">
+    <h2 id="t1">1. Vérifiez votre adresse e-mail</h2>
+    <p>Nous vous envoyons un lien de connexion à usage unique.</p>
+    <form id="form-lien">
+      <label for="email">Adresse e-mail du compte</label>
+      <input id="email" type="email" autocomplete="email" required>
+      <button type="submit">Recevoir le lien</button>
+    </form>
+  </section>
+
+  <section id="etape-suppression" aria-labelledby="t2" hidden>
+    <h2 id="t2">2. Confirmez la suppression</h2>
+    <form id="form-suppression">
+      <label for="confirmation">Saisissez SUPPRIMER pour confirmer</label>
+      <input id="confirmation" type="text" autocomplete="off" required>
+      <button class="danger" id="bouton-supprimer" type="submit" disabled>Supprimer définitivement mon compte</button>
+    </form>
+  </section>
+
+  <p id="message" role="status" aria-live="polite"></p>
+</main>
+
+<script type="module" src="suppression-compte.js"></script>
+</body>
+</html>
