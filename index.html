@@ -3,30 +3,114 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>vdeapps, applications Android</title>
+<meta name="theme-color" content="#1F1A24">
+<title>vdeapps, applications Android faites à la maison</title>
+<meta name="description" content="vdeapps : des applications Android simples, faites par un particulier, sans publicité. Mijote, le carnet de recettes pour la cuisine de tous les jours.">
+<link rel="icon" href="mijote/assets/icone.svg" type="image/svg+xml">
 <style>
-  :root { --encre:#1f1a17; --papier:#fbf6ec; --carte:#fff; --tomate:#b8361f; --safran:#f2a516; --trait:#e4dccb; --doux:#5a514b; }
-  @media (prefers-color-scheme: dark) {
-    :root { --encre:#f4ede2; --papier:#1b1714; --carte:#26211d; --tomate:#ff8a70; --trait:#3d3530; --doux:#c9bfb3; }
+  @font-face { font-family: "Commissioner"; src: url("mijote/assets/commissioner.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  :root {
+    --nuit: #1F1A24; --nuit-2: #2A2331; --texte: #F6F0EA; --texte-2: #CFC7D6; --trait: #3B3343;
+    --safran: #FFC233; --encre-safran: #4A4252; --sortie: cubic-bezier(.16, 1, .3, 1);
+    color-scheme: dark;
   }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--papier); color:var(--encre); font:18px/1.6 Figtree, system-ui, sans-serif; }
-  main { max-width:44rem; margin:0 auto; padding:3rem 1rem 4rem; }
-  h1 { font:800 2.4rem/1.1 "Bricolage Grotesque", Figtree, system-ui, sans-serif; margin:0 0 1.5rem; }
-  a.appli { display:block; background:var(--carte); border:1px solid var(--trait); border-radius:16px; padding:1rem 1.25rem; color:var(--encre); text-decoration:none; }
-  a.appli strong { font-size:1.3rem; color:var(--tomate); }
-  :focus-visible { outline:3px solid var(--safran); outline-offset:2px; }
-  .doux { color:var(--doux); font-size:.95rem; margin-top:2rem; }
-  .doux a { color:var(--tomate); }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--nuit); color: var(--texte);
+    font: 400 1.125rem/1.6 Commissioner, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column;
+  }
+  ::selection { background: var(--safran); color: var(--nuit); }
+  a { color: inherit; text-underline-offset: .2em; }
+  :focus-visible { outline: 3px solid var(--safran); outline-offset: 4px; border-radius: 8px; }
+  .large { width: min(100% - 2rem, 68rem); margin-inline: auto; }
+  .titre { font-weight: 850; font-variation-settings: "FLAR" 100; letter-spacing: -.03em; line-height: .95; text-wrap: balance; }
+
+  header { padding-block: clamp(4rem, 12vw, 8rem) clamp(3rem, 7vw, 5rem); }
+  h1 { font-size: clamp(3.5rem, 11vw, 8.5rem); margin: 0 0 1.5rem; }
+  h1 span { color: var(--safran); }
+  .chapeau { font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--texte-2); max-width: 30ch; margin: 0; }
+
+  main { flex: 1; }
+  .appli {
+    position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2rem 3rem; align-items: center;
+    background: var(--safran); color: var(--nuit); border-radius: 2rem; padding: clamp(1.75rem, 4vw, 3.25rem);
+  }
+  .icone {
+    width: clamp(7rem, 16vw, 11rem); aspect-ratio: 1; border-radius: 28%; overflow: hidden; display: block;
+    box-shadow: 0 18px 30px -16px rgba(92, 68, 0, .7); rotate: -4deg; transition: rotate .6s var(--sortie), scale .6s var(--sortie);
+  }
+  .appli:hover .icone { rotate: 0deg; scale: 1.04; }
+  .appli h2 { font-size: clamp(2.6rem, 6vw, 4.5rem); margin: 0 0 .75rem; }
+  .appli p { margin: 0 0 2rem; max-width: 46ch; color: var(--encre-safran); font-size: 1.15rem; }
+  .liens { display: flex; flex-wrap: wrap; gap: 1rem 1.75rem; align-items: center; }
+  .decouvrir {
+    display: inline-flex; align-items: center; gap: .7rem; background: var(--nuit); color: #fff; text-decoration: none;
+    font-weight: 750; padding: .9rem 1.5rem; border-radius: 999px; transition: gap .3s var(--sortie), transform .3s var(--sortie);
+  }
+  .decouvrir svg { width: 1.2rem; height: 1.2rem; }
+  .decouvrir:hover { gap: 1.1rem; }
+  .decouvrir:active { transform: scale(.97); }
+  .decouvrir:focus-visible, .play:focus-visible { outline-color: var(--nuit); }
+  .play { font-weight: 700; }
+
+
+  footer { border-top: 1px solid var(--trait); margin-top: clamp(4rem, 10vw, 7rem); padding-block: 2rem; color: var(--texte-2); font-size: .98rem; }
+  footer .large { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; }
+  footer p { margin: 0; }
+  footer a { color: #fff; }
+
+  @media (max-width: 640px) {
+    .appli { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    header > *, .appli { animation: monte .9s var(--sortie) both; }
+    header > :nth-child(2) { animation-delay: .08s; }
+    .appli { animation-delay: .18s; }
+    .icone { animation: pose 1.2s cubic-bezier(.34, 1.56, .64, 1) both .45s; }
+    @keyframes monte { from { opacity: 0; translate: 0 1.5rem; } }
+    @keyframes pose { from { rotate: -40deg; scale: .6; } }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>vdeapps</h1>
-  <a class="appli" href="mijote/"><strong>Mijote</strong><br>Un carnet de recettes simple, pensé pour la cuisine de tous les jours.</a>
-  <p class="doux">Applications éditées par un particulier, à titre non professionnel. Contact : <a href="mailto:vdeapps@gmail.com">vdeapps@gmail.com</a></p>
+<header class="large">
+  <h1 class="titre">vde<span>apps</span></h1>
+  <p class="chapeau">Des applications Android faites à la maison, pour les gens qui n'aiment pas les applications compliquées.</p>
+</header>
+
+<main class="large">
+  <article class="appli" aria-labelledby="mijote">
+    <a class="icone" href="mijote/" tabindex="-1" aria-hidden="true">
+      <svg viewBox="0 0 108 108" width="100%" height="100%">
+        <rect width="108" height="108" fill="#FFF7EE"/>
+        <circle cx="55.5" cy="56.5" r="31" fill="#1F1A24" opacity=".10"/>
+        <circle cx="54" cy="54" r="31" fill="#FFFFFF"/><circle cx="54" cy="54" r="24" fill="#FFF7EE"/>
+        <defs><g id="tranche"><circle r="9" fill="#D9341E"/><circle r="7.3" fill="#FF6146"/><circle cx="-3" cy="-2.2" r="1.1" fill="#FFC9A0"/><circle cx="3" cy="-2.6" r="1.1" fill="#FFC9A0"/><circle cx="-2.4" cy="3" r="1.1" fill="#FFC9A0"/><circle cx="3.2" cy="2.6" r="1.1" fill="#FFC9A0"/></g></defs>
+        <use href="#tranche" x="46" y="51"/><use href="#tranche" x="61.5" y="53.5"/><use href="#tranche" x="52.5" y="64"/>
+        <g transform="translate(60 41) rotate(-28)"><ellipse rx="7.5" ry="3.4" fill="#2E9E5B"/><path d="M-6 0H6" stroke="#1E6B42" stroke-width=".8"/></g>
+        <g transform="translate(67.5 45.5) rotate(18)"><ellipse rx="6.5" ry="3" fill="#3FAE6A"/><path d="M-5 0H5" stroke="#1E6B42" stroke-width=".8"/></g>
+        <circle cx="40" cy="63" r=".9" fill="#7A4A2E"/><circle cx="68" cy="64" r=".9" fill="#7A4A2E"/><circle cx="43" cy="42" r=".8" fill="#7A4A2E"/>
+      </svg>
+    </a>
+    <div>
+      <h2 id="mijote" class="titre">Mijote</h2>
+      <p>Un carnet de recettes simple, pensé pour la cuisine de tous les jours. Rangez vos recettes, retrouvez-les en deux mots et cuisinez une étape à la fois, en très grand. Elle marche même sans réseau, prépare le menu de la semaine et n'affiche aucune publicité.</p>
+      <div class="liens">
+        <a class="decouvrir" href="mijote/">Découvrir Mijote<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="play" href="https://play.google.com/store/apps/details?id=fr.vdeapps.mijote.app">Voir sur Google Play</a>
+      </div>
+    </div>
+  </article>
 </main>
+
+<footer>
+  <div class="large">
+    <p>Applications éditées par un particulier, à titre non professionnel.</p>
+    <p>Contact : <a href="mailto:vdeapps@gmail.com">vdeapps@gmail.com</a></p>
+  </div>
+</footer>
 </body>
 </html>

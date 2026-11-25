@@ -3,56 +3,514 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mijote, carnet de recettes</title>
-<meta name="description" content="Mijote, un carnet de recettes simple pour Android : toutes vos recettes au même endroit, même sans réseau.">
+<meta name="theme-color" content="#FFC233">
+<title>Mijote, le carnet de recettes simple pour Android</title>
+<meta name="description" content="Mijote range toutes vos recettes au même endroit, de la fiche de Mamie à la recette vue sur Instagram. De gros boutons, des mots simples, même sans réseau. Gratuit et sans publicité.">
+<link rel="icon" href="assets/icone.svg" type="image/svg+xml">
+<link rel="preload" href="assets/commissioner.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-  :root { --encre:#1f1a17; --papier:#fbf6ec; --carte:#fff; --tomate:#b8361f; --safran:#f2a516; --trait:#e4dccb; --doux:#5a514b; }
-  @media (prefers-color-scheme: dark) {
-    :root { --encre:#f4ede2; --papier:#1b1714; --carte:#26211d; --tomate:#ff8a70; --trait:#3d3530; --doux:#c9bfb3; }
+  @font-face { font-family: "Commissioner"; src: url("assets/commissioner.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: "Plume"; src: url("assets/homemade-apple.woff2") format("woff2"); font-display: swap; }
+
+  :root {
+    --encre: #1F1A24; --encre-2: #5E5566; --encre-safran: #4A4252; --sol: #FFFCF7; --surface: #FFFFFF; --trait: #F1E8DC;
+    --safran: #FFC233; --safran-clair: #FFD866; --safran-encre: #5C4400;
+    --tomate: #FF5B3A; --tomate-fonce: #D63A1C; --basilic: #2E9E5B; --basilic-fonce: #1E6B42;
+    --peche: #FFD9C7; --peche-2: #FFC6AC; --peche-encre: #A3341A;
+    --menthe: #CDEFD8; --lilas: #E6DBFF; --beurre: #FFE9A8; --ciel: #CFE6FF;
+    --papier: #F4E6C8; --papier-encre: #2D3A6B;
+    --sortie: cubic-bezier(.16, 1, .3, 1);
+    --rebond: cubic-bezier(.34, 1.56, .64, 1);
+    color-scheme: light;
   }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--papier); color:var(--encre); font:18px/1.6 Figtree, system-ui, sans-serif; }
-  main { max-width:44rem; margin:0 auto; padding:3rem 1rem 4rem; }
-  h1 { font:800 3rem/1.05 "Bricolage Grotesque", Figtree, system-ui, sans-serif; margin:0 0 .25rem; }
-  .trait { width:7rem; height:.5rem; border-radius:.25rem; background:var(--safran); margin:.5rem 0 1.5rem; }
-  .accroche { font-size:1.3rem; font-weight:600; margin:0 0 1.5rem; }
-  section { background:var(--carte); border:1px solid var(--trait); border-radius:16px; padding:1rem 1.25rem; margin:1.5rem 0; }
-  ul { padding-left:1.2rem; margin:.5rem 0; }
-  .bouton { display:inline-block; background:var(--encre); color:var(--papier); text-decoration:none; font-weight:700; padding:.8rem 1.4rem; border-radius:999px; }
-  a { color:var(--tomate); }
-  :focus-visible { outline:3px solid var(--safran); outline-offset:2px; }
-  .doux { color:var(--doux); font-size:.95rem; }
+  @media (prefers-color-scheme: dark) {
+    :root { --sol: #17131B; --surface: #241E2A; --trait: #352D3C; --texte: #F6F0EA; --texte-2: #CFC7D6; color-scheme: dark; }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0; background: var(--sol); color: var(--texte, var(--encre));
+    font: 400 1.125rem/1.6 Commissioner, system-ui, sans-serif;
+    font-variation-settings: "FLAR" 0, "VOLM" 0;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--safran); color: var(--encre); }
+  a { color: inherit; text-underline-offset: .2em; text-decoration-thickness: .08em; }
+  :focus-visible { outline: 3px solid var(--encre); outline-offset: 3px; border-radius: 6px; }
+  img { display: block; max-width: 100%; }
+  .titre { font-family: Commissioner, system-ui, sans-serif; font-weight: 850; font-variation-settings: "FLAR" 100, "VOLM" 0; letter-spacing: -.025em; line-height: .98; text-wrap: balance; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .large { width: min(100% - 2rem, 76rem); margin-inline: auto; }
+
+  /* ---------- Boutons ---------- */
+  .play {
+    display: inline-flex; align-items: center; gap: .9rem; padding: .85rem 1.6rem .85rem 1rem;
+    background: var(--encre); color: #fff; text-decoration: none; border-radius: 999px;
+    box-shadow: 0 10px 24px -10px rgba(31, 26, 36, .55);
+    transition: transform .35s var(--sortie), box-shadow .35s var(--sortie);
+  }
+  .play:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(31, 26, 36, .6); }
+  .play:active { transform: translateY(0) scale(.97); transition-duration: .1s; }
+  .play:focus-visible { outline-color: var(--encre); outline-offset: 4px; border-radius: 999px; }
+  .play svg { flex: none; width: 2.6rem; height: 2.6rem; }
+  .play span { display: grid; line-height: 1.15; }
+  .play small { font-size: .8rem; font-weight: 500; color: #CFC7D6; }
+  .play strong { font-size: 1.15rem; font-weight: 750; }
+
+  /* ---------- Ouverture ---------- */
+  .ouverture { background: var(--safran); color: var(--encre); overflow: hidden; position: relative; isolation: isolate; }
+  .ouverture::before {
+    content: ""; position: absolute; z-index: -1; width: 46rem; aspect-ratio: 1; border-radius: 50%;
+    background: var(--safran-clair); right: -14rem; top: -18rem;
+  }
+  .barre { display: flex; align-items: center; justify-content: space-between; padding-block: 1.25rem; }
+  .marque { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; font-size: 1.5rem; }
+  .marque svg { width: 2.4rem; height: 2.4rem; border-radius: .7rem; }
+  .barre .lien-installer {
+    font-weight: 700; text-decoration: none; padding: .55rem 1.1rem; border-radius: 999px;
+    border: 2px solid var(--encre); transition: background .25s, color .25s;
+  }
+  .barre .lien-installer:hover { background: var(--encre); color: var(--safran); }
+
+  .scene {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem 4rem; align-items: center;
+    padding-block: 2.5rem 6rem;
+  }
+  h1 { font-size: clamp(3rem, 7.2vw, 6rem); margin: 0 0 1.75rem; }
+  h1 .ligne { display: block; }
+  .pastille {
+    display: inline-grid; place-items: center; vertical-align: -.08em; width: 1.75em; height: .92em;
+    background: #fff; border-radius: 999px; margin-inline: .04em;
+    box-shadow: inset 0 0 0 .05em rgba(31, 26, 36, .06);
+  }
+  .pastille svg { width: .82em; height: .82em; }
+  .chapeau { font-size: clamp(1.15rem, 1.6vw, 1.35rem); color: var(--encre-safran); max-width: 34ch; margin: 0 0 2.25rem; font-weight: 450; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem 2rem; }
+  .qr { display: flex; align-items: center; gap: 1rem; margin: 0; }
+  .qr .code {
+    width: 7.25rem; padding: .6rem; background: #fff; border-radius: 1rem;
+    box-shadow: 0 8px 20px -12px rgba(31, 26, 36, .45);
+  }
+  .qr figcaption { font-size: .95rem; line-height: 1.35; color: var(--encre-safran); max-width: 14ch; font-weight: 550; }
+  .mention { margin: 1.5rem 0 0; font-size: .95rem; font-weight: 600; color: var(--encre-safran); }
+
+  /* ---------- La fiche : papier / Mijote ---------- */
+  .fiche { margin: 0; position: relative; justify-self: center; width: min(100%, 33rem); --coupe: 55%; container-type: inline-size; }
+  .fiche-cadre {
+    position: relative; aspect-ratio: 27 / 34; rotate: 2.5deg; border-radius: 1.75rem; font-size: clamp(.75rem, 3.7cqi, 1.25rem);
+    box-shadow: 0 30px 60px -30px rgba(92, 68, 0, .55), 0 10px 20px -12px rgba(92, 68, 0, .35);
+  }
+  .face { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; }
+
+  .papier {
+    background:
+      radial-gradient(circle at 78% 70%, transparent 3.1em, rgba(150, 96, 40, .16) 3.2em, rgba(150, 96, 40, .05) 3.6em, transparent 3.75em),
+      radial-gradient(ellipse at 20% 12%, rgba(255, 255, 255, .55), transparent 55%),
+      linear-gradient(170deg, #F8EDD3, var(--papier) 60%, #EAD7B0);
+    color: var(--papier-encre); font-family: Plume, cursive; padding: 2.2em 1.7em 1.5em 2.1em;
+    border-radius: .4em; font-size: .95em; line-height: 2.05;
+  }
+  .papier::after {
+    content: ""; position: absolute; right: 0; top: 0; width: 3.2em; height: 3.2em;
+    background: linear-gradient(225deg, var(--safran) 50%, #E3CC9F 50%, #F2E2BE);
+    box-shadow: -3px 3px 6px rgba(92, 68, 0, .18);
+  }
+  .papier h2 { font: inherit; font-size: 1.3em; margin: 0 0 .1em; transform: rotate(-2deg); }
+  .papier p, .papier ul { margin: 0; padding: 0; list-style: none; }
+  .papier .pour { margin-left: 4.5em; transform: rotate(-1deg); opacity: .85; }
+  .papier li { transform: rotate(-.6deg); }
+  .papier s { text-decoration-thickness: 2px; }
+  .papier .note { color: #8A2812; transform: rotate(-5deg); margin: .2em 0 0 6em; }
+
+  .appli { background: var(--peche); color: var(--encre); clip-path: inset(0 calc(100% - var(--coupe)) 0 0 round 1.75em 0 0 1.75em); }
+  .vignette { height: 38%; background: var(--peche-2); display: grid; place-items: center; position: relative; }
+  .vignette svg { width: 54%; height: auto; filter: drop-shadow(0 10px 10px rgba(163, 52, 26, .2)); }
+  .etiquette {
+    position: absolute; left: 1em; top: 1em; background: #fff; color: var(--basilic-fonce); font-weight: 800;
+    font-size: .8em; padding: .25em .7em; border-radius: 999px; font-variation-settings: "FLAR" 100;
+  }
+  .appli-corps { padding: 1em 1.2em 1.2em; }
+  .appli h2 { font-size: 1.45em; margin: 0 0 .25em; }
+  .meta { display: flex; align-items: center; gap: .4em; font-size: .88em; font-weight: 600; color: var(--encre-2); margin: 0 0 .85em; font-variant-numeric: tabular-nums; }
+  .meta svg { width: 1em; height: 1em; }
+  .ingredients { list-style: none; margin: 0; padding: 0; display: grid; gap: .4em; }
+  .ingredients li {
+    display: flex; justify-content: space-between; gap: .5em; background: #fff; border-radius: .8em;
+    padding: .38em .75em; font-size: .88em; font-weight: 600;
+  }
+  .ingredients b { font-weight: 700; color: var(--encre-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .cuisiner {
+    position: absolute; left: 1.2em; right: 1.2em; bottom: 1.1em; display: flex; align-items: center; justify-content: space-between;
+    background: var(--encre); color: #fff; border-radius: 999px; padding: .5em .5em .5em 1.2em; font-weight: 750;
+  }
+  .cuisiner small { display: block; font-weight: 500; font-size: .75em; color: #CFC7D6; }
+  .cuisiner i { width: 2.4em; height: 2.4em; border-radius: 50%; background: var(--tomate); display: grid; place-items: center; }
+  .cuisiner i svg { width: 1em; height: 1em; }
+
+  .poignee {
+    position: absolute; top: -1rem; bottom: -1rem; left: var(--coupe); width: 0; pointer-events: none; z-index: 2;
+  }
+  .poignee::before { content: ""; position: absolute; inset: 0 auto 0 -2px; width: 4px; border-radius: 2px; background: var(--encre); }
+  .poignee span {
+    position: absolute; top: 50%; left: 0; translate: -50% -50%; width: 3.25rem; height: 3.25rem; border-radius: 50%;
+    background: var(--encre); display: grid; place-items: center; box-shadow: 0 8px 18px -6px rgba(31, 26, 36, .6);
+    transition: scale .3s var(--rebond);
+  }
+  .poignee svg { width: 1.6rem; height: 1.6rem; }
+  .fiche input {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; z-index: 3; rotate: 2.5deg;
+  }
+  .fiche input:focus-visible ~ .fiche-cadre .poignee span,
+  .fiche:hover .poignee span { scale: 1.12; }
+  .fiche input:focus-visible ~ .fiche-cadre .poignee span { outline: 3px solid #fff; outline-offset: 3px; }
+  .fiche figcaption {
+    margin-top: 1.75rem; display: flex; align-items: center; justify-content: center; gap: .6rem;
+    font-weight: 650; font-size: .95rem; color: var(--encre-safran);
+  }
+  .fiche figcaption svg { width: 1.4rem; height: 1.4rem; }
+
+  /* ---------- Histoire ---------- */
+  .histoire { padding-block: clamp(5rem, 12vw, 9rem); }
+  .histoire blockquote { margin: 0; }
+  .histoire blockquote p { font-size: clamp(2.1rem, 4.8vw, 4rem); margin: 0; line-height: 1.04; max-width: 17ch; }
+  .histoire blockquote mark { background: none; color: var(--tomate-fonce); }
+  @media (prefers-color-scheme: dark) { .histoire blockquote mark { color: #FF8A70; } }
+  .histoire .suite { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1.5rem 4rem; margin-top: 3rem; max-width: 62rem; }
+  .histoire .suite p { margin: 0; color: var(--texte-2, var(--encre-2)); }
+  .histoire cite { display: block; margin-top: 2.5rem; font-weight: 700; color: var(--texte-2, var(--encre-2)); font-style: normal; }
+
+  /* ---------- Étapes ---------- */
+  .etapes-tete { background: var(--ciel); color: var(--encre); padding-top: clamp(4rem, 8vw, 6rem); }
+  .etapes h2 { font-size: clamp(2.3rem, 5vw, 4.25rem); margin: 0 auto; }
+  .etape { color: var(--encre); overflow: hidden; }
+  .etape:nth-of-type(1) { background: var(--ciel); }
+  .etape:nth-of-type(2) { background: var(--menthe); }
+  .etape:nth-of-type(3) { background: var(--lilas); }
+  .etape:nth-of-type(4) { background: var(--beurre); }
+  .etape .large { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem 5rem; align-items: center; padding-block: clamp(3rem, 6vw, 4.5rem); }
+  .etape:first-of-type .large { padding-top: clamp(1.5rem, 3vw, 2.5rem); }
+  .etape:nth-of-type(even) .large { grid-template-columns: auto minmax(0, 1fr); }
+  .etape:nth-of-type(even) .telephone { order: -1; }
+  .numero { margin: 0 0 1.25rem; }
+  .numero b { font-size: clamp(4.5rem, 11vw, 8.5rem); line-height: .8; font-weight: 900; font-variation-settings: "FLAR" 100; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+  .etape h3 { font-size: clamp(1.9rem, 3.4vw, 2.75rem); margin: 0 0 1rem; }
+  .etape p { margin: 0; max-width: 40ch; font-size: 1.2rem; color: var(--encre-safran); }
+  .etape.grand h3 { font-size: clamp(2.6rem, 5.6vw, 4.75rem); }
+  .etape.grand p { font-size: clamp(1.35rem, 2.3vw, 1.8rem); line-height: 1.35; max-width: 24ch; color: var(--encre); font-weight: 550; }
+  .telephone {
+    width: clamp(15rem, 28vw, 21rem); padding: .6rem; border-radius: 2.4rem; background: var(--encre);
+    box-shadow: 0 34px 50px -30px rgba(31, 26, 36, .7); rotate: -3deg;
+  }
+  .etape:nth-of-type(even) .telephone { rotate: 3deg; }
+  .telephone img { border-radius: 1.9rem; aspect-ratio: 390 / 844; object-fit: cover; object-position: top; width: 100%; height: auto; background: #fff; }
+
+  /* ---------- Ingrédients ---------- */
+  .ingredients-bloc { background: var(--basilic-fonce); color: #fff; padding-block: clamp(5rem, 10vw, 8rem); }
+  .ingredients-bloc .large { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 3rem 5rem; align-items: start; }
+  .ingredients-bloc h2 { font-size: clamp(2.3rem, 5vw, 4.25rem); margin: 0 0 1.25rem; }
+  .ingredients-bloc .aide { margin: 0 0 2rem; color: #D4EDDC; max-width: 34ch; }
+  .compte { display: flex; justify-content: space-between; font-weight: 750; margin-bottom: .6rem; font-variant-numeric: tabular-nums; }
+  .jauge { height: .55rem; border-radius: 999px; background: rgba(255, 255, 255, .16); overflow: hidden; }
+  .jauge i { display: block; height: 100%; width: calc(var(--fait, 0) * 100%); background: var(--safran); border-radius: inherit; transition: width .6s var(--sortie); }
+  .bravo-liste { min-height: 1.6em; margin: 1.25rem 0 0; font-weight: 750; color: var(--safran); }
+  .liste { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+  .liste label {
+    display: flex; align-items: center; gap: 1rem; padding: .95rem 1.2rem; border-radius: 1.1rem; cursor: pointer;
+    background: rgba(255, 255, 255, .1); transition: background .25s;
+  }
+  .liste label:hover { background: rgba(255, 255, 255, .16); }
+  .liste input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .coche {
+    flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .7);
+    display: grid; place-items: center; transition: background .25s, border-color .25s;
+  }
+  .coche svg { width: 1rem; height: 1rem; scale: 0; transition: scale .4s var(--rebond); }
+  .liste .nom { flex: 1; font-weight: 650; }
+  .liste .qte { font-weight: 600; color: #EAF7EE; text-align: right; font-size: .98rem; }
+  .liste input:checked + .coche { background: var(--safran); border-color: var(--safran); }
+  .liste input:checked + .coche svg { scale: 1; }
+  .liste input:focus-visible + .coche { outline: 3px solid var(--safran); outline-offset: 3px; }
+
+  /* ---------- Fin ---------- */
+  .fin { background: var(--safran); color: var(--encre); padding-block: clamp(5rem, 10vw, 8rem) 0; text-align: center; overflow: hidden; }
+  .assiette-fin { position: relative; width: min(17rem, 60vw); margin: 0 auto 2.5rem; }
+  .assiette-fin > svg { width: 100%; height: auto; filter: drop-shadow(0 18px 18px rgba(92, 68, 0, .25)); }
+  .eclats { position: absolute; inset: -30%; pointer-events: none; }
+  .eclats i { position: absolute; left: 50%; top: 50%; width: .8rem; height: .8rem; border-radius: 50%; background: var(--c); translate: calc(-50% + var(--x)) calc(-50% + var(--y)); }
+  .eclats i.losange { border-radius: 2px; rotate: 45deg; }
+  .fin h2 { font-size: clamp(2.6rem, 6.4vw, 5.5rem); margin: 0 auto 1.25rem; max-width: 14ch; }
+  .fin .chapeau { margin-inline: auto; max-width: 38ch; }
+  .fin .actions { justify-content: center; }
+  .pied { margin-top: clamp(5rem, 10vw, 7rem); background: var(--encre); color: #CFC7D6; padding-block: 2.5rem; text-align: left; font-size: .98rem; }
+  .pied .large { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1.5rem 3rem; }
+  .pied nav { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; }
+  .pied a { color: #fff; }
+  .pied p { margin: 0; max-width: 52ch; }
+
+  /* ---------- Mise en page étroite ---------- */
+  @media (max-width: 860px) {
+    .scene { grid-template-columns: 1fr; padding-block: 1.5rem 4.5rem; gap: 3rem; }
+    .etape .large, .etape:nth-of-type(even) .large { grid-template-columns: 1fr; justify-items: start; }
+    .etape:nth-of-type(even) .telephone { order: 0; }
+    .telephone { justify-self: center; }
+    .ingredients-bloc .large { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    .qr { display: none; }
+    .play { width: 100%; }
+    .barre .lien-installer { display: none; }
+  }
+  @media (max-width: 380px) {
+    .papier { font-size: .82rem; padding: 1.8rem 1.2rem 1rem 1.5rem; }
+    .appli-corps { padding: .8rem .9rem; }
+    .ingredients li { font-size: .8rem; }
+  }
+
+  /* ---------- Mouvement (seulement si le téléphone l'accepte et si le script tourne) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .anime .ouverture .entree { opacity: 0; translate: 0 1.6rem; animation: monte .9s var(--sortie) forwards; animation-delay: calc(var(--i, 0) * 90ms + 100ms); }
+    .anime .ouverture .pastille svg { animation: tourne 1.1s var(--rebond) both .55s; }
+    .anime .fiche-cadre { animation: pose 1.1s var(--sortie) both .35s; }
+    @keyframes monte { to { opacity: 1; translate: 0 0; } }
+    @keyframes tourne { from { rotate: -140deg; scale: .4; } to { rotate: 0deg; scale: 1; } }
+    @keyframes pose { from { opacity: 0; translate: 0 3rem; rotate: 9deg; } to { opacity: 1; translate: 0 0; rotate: 2.5deg; } }
+
+    .anime .revele { opacity: 0; translate: 0 2.5rem; transition: opacity .8s var(--sortie), translate .9s var(--sortie); }
+    .anime .revele.vu { opacity: 1; translate: 0 0; }
+    .anime .etape .telephone { translate: 0 4rem; rotate: 0deg; opacity: 0; transition: translate 1s var(--sortie) .12s, rotate 1.2s var(--rebond) .12s, opacity .6s .12s; }
+    .anime .etape.vu .telephone { translate: 0 0; rotate: -3deg; opacity: 1; }
+    .anime .etape:nth-of-type(even).vu .telephone { rotate: 3deg; }
+    .anime .etape .numero b { display: inline-block; clip-path: inset(100% 0 0 0); translate: 0 .3em; transition: clip-path .9s var(--sortie), translate .9s var(--sortie); }
+    .anime .etape.vu .numero b { clip-path: inset(-10% 0 -10% 0); translate: 0 0; }
+
+    .eclats i { opacity: 0; translate: -50% -50%; }
+    .fin.vu .eclats i { animation: eclat 1.4s var(--sortie) forwards; animation-delay: var(--d, 0s); }
+    @keyframes eclat {
+      0% { opacity: 0; translate: -50% -50%; scale: .3; }
+      20% { opacity: 1; }
+      100% { opacity: 1; translate: calc(-50% + var(--x)) calc(-50% + var(--y)); scale: 1; }
+    }
+    .anime .fin .assiette-fin > svg { scale: .7; rotate: -30deg; opacity: 0; transition: scale 1s var(--rebond), rotate 1s var(--rebond), opacity .4s; }
+    .anime .fin.vu .assiette-fin > svg { scale: 1; rotate: 0deg; opacity: 1; }
+  }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="tranche"><circle r="9" fill="#D9341E"/><circle r="7.3" fill="#FF6146"/><circle cx="-3" cy="-2.2" r="1.1" fill="#FFC9A0"/><circle cx="3" cy="-2.6" r="1.1" fill="#FFC9A0"/><circle cx="-2.4" cy="3" r="1.1" fill="#FFC9A0"/><circle cx="3.2" cy="2.6" r="1.1" fill="#FFC9A0"/></g>
+    <symbol id="assiette" viewBox="22 22 64 64">
+      <circle cx="55.5" cy="56.5" r="31" fill="#1F1A24" opacity=".08"/>
+      <circle cx="54" cy="54" r="31" fill="#FFFFFF"/><circle cx="54" cy="54" r="24" fill="#FFF7EE"/>
+      <use href="#tranche" x="46" y="51"/><use href="#tranche" x="61.5" y="53.5"/><use href="#tranche" x="52.5" y="64"/>
+      <g transform="translate(60 41) rotate(-28)"><ellipse rx="7.5" ry="3.4" fill="#2E9E5B"/><path d="M-6 0H6" stroke="#1E6B42" stroke-width=".8"/></g>
+      <g transform="translate(67.5 45.5) rotate(18)"><ellipse rx="6.5" ry="3" fill="#3FAE6A"/><path d="M-5 0H5" stroke="#1E6B42" stroke-width=".8"/></g>
+      <circle cx="40" cy="63" r=".9" fill="#7A4A2E"/><circle cx="68" cy="64" r=".9" fill="#7A4A2E"/><circle cx="43" cy="42" r=".8" fill="#7A4A2E"/>
+    </symbol>
+    <symbol id="tranches" viewBox="36 30 42 44">
+      <use href="#tranche" x="46" y="51"/><use href="#tranche" x="61.5" y="53.5"/><use href="#tranche" x="52.5" y="64"/>
+      <g transform="translate(60 41) rotate(-28)"><ellipse rx="7.5" ry="3.4" fill="#2E9E5B"/></g>
+      <g transform="translate(67.5 45.5) rotate(18)"><ellipse rx="6.5" ry="3" fill="#3FAE6A"/></g>
+    </symbol>
+    <symbol id="lecture" viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="#FFC233"/><path d="M19 15.5v17a1.2 1.2 0 0 0 1.8 1l13.4-8.5a1.2 1.2 0 0 0 0-2L20.8 14.5a1.2 1.2 0 0 0-1.8 1Z" fill="#1F1A24"/></symbol>
+  </defs>
+</svg>
+
+<header class="ouverture">
+  <div class="large barre">
+    <a class="marque titre" href="./" aria-label="Mijote, accueil">
+      <svg viewBox="0 0 108 108" aria-hidden="true"><rect width="108" height="108" fill="#FFF7EE"/><use href="#assiette" x="9" y="9" width="90" height="90"/></svg>
+      Mijote
+    </a>
+    <a class="lien-installer" href="https://play.google.com/store/apps/details?id=fr.vdeapps.mijote.app">Installer</a>
+  </div>
+
+  <div class="large scene">
+    <div>
+      <h1 class="titre">
+        <span class="ligne entree" style="--i:0">Vos recettes,</span>
+        <span class="ligne entree" style="--i:1"><span class="pastille" aria-hidden="true"><svg><use href="#tranches"/></svg></span> enfin</span>
+        <span class="ligne entree" style="--i:2">au propre.</span>
+      </h1>
+      <p class="chapeau entree" style="--i:3">La fiche tachée de Mamie, la tarte vue sur Instagram, celle que vous dictez en épluchant&#8239;: Mijote range tout au même endroit, en gros et en clair.</p>
+      <div class="actions entree" style="--i:4">
+        <a class="play" href="https://play.google.com/store/apps/details?id=fr.vdeapps.mijote.app">
+          <svg aria-hidden="true"><use href="#lecture"/></svg>
+          <span><small>Gratuit, sur</small><strong>Google Play</strong></span>
+        </a>
+        <figure class="qr">
+          <svg class="code" viewBox="0 0 37 37" role="img" aria-label="QR code vers Mijote sur Google Play"><path stroke="#1F1A24" d="M0 0.5h7m1 0h1m4 0h5m1 0h6m1 0h1m3 0h7m-37 1h1m5 0h1m1 0h1m5 0h1m1 0h4m1 0h1m2 0h1m3 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m2 0h1m1 0h1m2 0h4m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m4 0h2m4 0h2m2 0h1m3 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h6m1 0h2m1 0h2m1 0h2m2 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m2 0h1m2 0h5m5 0h2m6 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-26 1h1m5 0h4m2 0h1m1 0h1m1 0h2m-29 1h1m2 0h7m1 0h4m4 0h1m1 0h3m2 0h1m1 0h2m2 0h1m1 0h3m-32 1h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m3 0h2m2 0h2m3 0h5m-33 1h2m1 0h2m7 0h2m2 0h7m1 0h1m1 0h2m1 0h2m2 0h1m-32 1h1m1 0h1m1 0h1m1 0h2m3 0h2m1 0h2m1 0h3m1 0h2m1 0h3m2 0h3m-37 1h2m3 0h2m2 0h1m1 0h1m3 0h1m7 0h2m3 0h1m1 0h1m5 0h1m-35 1h2m1 0h1m1 0h2m3 0h5m1 0h1m2 0h1m1 0h2m1 0h3m3 0h2m-31 1h2m1 0h3m1 0h1m2 0h4m1 0h2m7 0h1m1 0h2m1 0h5m-37 1h1m1 0h1m1 0h2m6 0h1m7 0h3m3 0h2m1 0h3m1 0h4m-36 1h2m1 0h4m2 0h1m2 0h2m2 0h2m2 0h2m2 0h1m1 0h1m2 0h1m3 0h2m-36 1h3m6 0h1m1 0h1m5 0h1m3 0h2m2 0h1m1 0h3m1 0h1m1 0h1m-33 1h4m1 0h3m2 0h1m4 0h2m1 0h1m3 0h1m1 0h1m1 0h1m3 0h1m2 0h1m1 0h1m-37 1h2m2 0h1m2 0h1m2 0h1m2 0h1m1 0h2m1 0h3m1 0h1m1 0h4m2 0h1m1 0h2m2 0h1m-36 1h1m2 0h1m1 0h1m1 0h1m3 0h3m1 0h2m1 0h2m3 0h1m1 0h8m-33 1h1m1 0h1m5 0h1m2 0h4m1 0h3m3 0h1m1 0h3m4 0h1m1 0h1m-32 1h4m1 0h1m1 0h1m1 0h1m2 0h2m4 0h1m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m2 0h1m-37 1h1m4 0h1m1 0h2m1 0h1m3 0h1m1 0h1m1 0h1m7 0h2m2 0h5m-35 1h4m2 0h3m1 0h1m2 0h1m3 0h1m1 0h4m1 0h1m5 0h1m-31 1h1m1 0h2m1 0h1m2 0h1m1 0h1m1 0h2m4 0h2m2 0h2m1 0h1m1 0h3m2 0h2m-34 1h2m2 0h5m1 0h1m1 0h1m1 0h2m6 0h1m1 0h5m1 0h4m1 0h2m-37 1h1m1 0h1m2 0h1m2 0h7m1 0h1m2 0h1m2 0h2m4 0h4m1 0h3m-36 1h1m2 0h2m1 0h6m3 0h1m3 0h2m1 0h1m1 0h9m1 0h3m-29 1h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h4m5 0h1m3 0h1m1 0h1m-35 1h7m1 0h2m3 0h3m1 0h3m3 0h1m1 0h1m2 0h1m1 0h1m1 0h1m2 0h2m-37 1h1m5 0h1m1 0h2m1 0h1m1 0h2m6 0h1m1 0h4m1 0h1m3 0h1m2 0h1m-36 1h1m1 0h3m1 0h1m1 0h1m2 0h2m1 0h3m1 0h1m1 0h2m2 0h1m1 0h7m3 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h5m5 0h1m1 0h9m3 0h1m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h5m3 0h1m3 0h3m1 0h1m1 0h2m3 0h3m1 0h1m-37 1h1m5 0h1m5 0h1m2 0h1m1 0h2m4 0h1m3 0h1m1 0h2m1 0h1m1 0h3m-37 1h7m1 0h2m3 0h2m1 0h1m2 0h2m1 0h3m3 0h4m1 0h1m2 0h1"/></svg>
+          <figcaption>Sur ordinateur&#8239;? Visez ce code avec votre téléphone.</figcaption>
+        </figure>
+      </div>
+      <p class="mention entree" style="--i:5">Sans publicité. Pour Android 9 et plus.</p>
+    </div>
+
+    <figure class="fiche" id="fiche">
+      <input type="range" min="0" max="100" value="55" step="1" aria-label="Mettre la recette au propre : à gauche la fiche Mijote, à droite le papier d'origine">
+      <div class="fiche-cadre">
+        <div class="face papier" aria-hidden="true">
+          <h2>Tarte fine aux tomates</h2>
+          <p class="pour">pour 4 (celle de Mamie)</p>
+          <ul>
+            <li>1 pâte feuilletée</li>
+            <li>600 g de tomates <s>rondes</s> anciennes</li>
+            <li>2 c. à soupe de moutarde</li>
+            <li>1 gousse d'ail, thym, basilic</li>
+            <li>four 200° · 35 min</li>
+            <li>piquer la pâte, moutarde partout</li>
+            <li>sauf 2 cm au bord&nbsp;!!</li>
+          </ul>
+          <p class="note">pas trop cuite</p>
+        </div>
+        <div class="face appli">
+          <div class="vignette"><span class="etiquette">Végé</span><svg aria-hidden="true"><use href="#assiette"/></svg></div>
+          <div class="appli-corps">
+            <h2 class="titre">Tarte fine aux tomates</h2>
+            <p class="meta"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>55&nbsp;min · 4&nbsp;pers.</p>
+            <ul class="ingredients">
+              <li>Pâte feuilletée <b>1 pièce</b></li>
+              <li>Tomates anciennes <b>600&nbsp;g</b></li>
+              <li>Moutarde <b>2 c. à s.</b></li>
+            </ul>
+          </div>
+          <div class="cuisiner"><span>Cuisiner <small>5 étapes · 55&nbsp;min</small></span><i><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7-4.5z" fill="#fff"/></svg></i></div>
+        </div>
+        <div class="poignee" aria-hidden="true"><span><svg viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M15 6l6 6-6 6" fill="none" stroke="#FFC233" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      </div>
+      <figcaption><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V12m0-.5a1.5 1.5 0 0 1 3 0V16a6 6 0 0 1-6 6h-1.2a6 6 0 0 1-4.6-2.2L4 15.6a1.6 1.6 0 0 1 2.4-2.1L8 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Glissez pour mettre au propre</figcaption>
+    </figure>
+  </div>
+</header>
+
 <main>
-  <h1>Mijote</h1>
-  <div class="trait"></div>
-  <p class="accroche">Un carnet de recettes simple, pensé pour la cuisine de tous les jours.</p>
-  <p><a class="bouton" href="https://play.google.com/store/apps/details?id=fr.vdeapps.mijote.app">Installer Mijote sur Google Play</a></p>
-
-  <section aria-labelledby="quoi">
-    <h2 id="quoi">Ce que fait Mijote</h2>
-    <ul>
-      <li>Toutes vos recettes au même endroit, même sans réseau.</li>
-      <li>Un mode cuisine qui affiche une étape à la fois, en très grand, avec des minuteurs.</li>
-      <li>Le menu de la semaine et la liste des ingrédients à prévoir.</li>
-      <li>Les calories par part, estimées sans calculer.</li>
-      <li>Pas de publicité.</li>
-    </ul>
+  <section class="histoire large" aria-labelledby="histoire-titre">
+    <h2 id="histoire-titre" class="sr">Pourquoi Mijote existe</h2>
+    <blockquote class="revele">
+      <p class="titre">«&nbsp;J'ai créé Mijote pour ma femme, qui n'est pas très <mark>«&nbsp;téléphone&nbsp;»</mark>.&nbsp;»</p>
+    </blockquote>
+    <div class="suite revele">
+      <p>Il fallait qu'elle l'ouvre sans hésiter&#8239;: de grands boutons, peu d'écrans, des mots de tous les jours. Si elle s'y retrouve, tout le monde s'y retrouve, que l'on ait 15 ou 85 ans.</p>
+      <p>Chez Mamie, les recettes étaient griffonnées sur des bouts de papier. Tachées, cornées, parfois perdues. Mijote est là pour les garder, et pour pouvoir les transmettre.</p>
+    </div>
+    <cite class="revele">Le créateur de Mijote</cite>
   </section>
 
-  <section aria-labelledby="donnees">
-    <h2 id="donnees">Vos données</h2>
-    <ul>
-      <li><a href="confidentialite/">Politique de confidentialité</a></li>
-      <li><a href="suppression-compte/">Supprimer mon compte Mijote</a></li>
-    </ul>
+  <section class="etapes" aria-labelledby="etapes-titre">
+    <div class="etapes-tete"><h2 id="etapes-titre" class="titre large revele">Du lien jusqu'à l'assiette.</h2></div>
+
+    <article class="etape">
+      <div class="large">
+        <div>
+          <p class="numero" aria-hidden="true"><b>01</b></p>
+          <h3 class="titre">Ajoutez sans recopier</h3>
+          <p>Mijote ajoute vos recettes depuis d'autres sites ou applications, comme Instagram ou Facebook, ou par un simple copier-coller du lien ou du texte. Un proche veut vous donner la sienne&#8239;? Il vous montre son QR code, vous l'ajoutez en un toucher.</p>
+        </div>
+        <div class="telephone"><img src="assets/ecran-partage-qr.webp" width="390" height="844" loading="lazy" alt="Partage d'une recette par QR code, à faire lire dans Mijote"></div>
+      </div>
+    </article>
+
+    <article class="etape">
+      <div class="large">
+        <div>
+          <p class="numero" aria-hidden="true"><b>02</b></p>
+          <h3 class="titre">Retrouvez en deux mots</h3>
+          <p>Tapez un titre, un ingrédient, ou choisissez «&nbsp;dessert&nbsp;», «&nbsp;moins de 30 minutes&nbsp;», «&nbsp;sans œuf&nbsp;». Mijote reconnaît tout seul les recettes végétariennes, vegan ou rapides.</p>
+        </div>
+        <div class="telephone"><img src="assets/ecran-recettes.webp" width="390" height="844" loading="lazy" alt="Écran des recettes : « Qu’est-ce qu’on Mijote ? », avec des cartes de couleur"></div>
+      </div>
+    </article>
+
+    <article class="etape grand">
+      <div class="large">
+        <div>
+          <p class="numero" aria-hidden="true"><b>03</b></p>
+          <h3 class="titre">Cuisinez à un mètre de l'écran</h3>
+          <p>Une étape à la fois, en très grand. L'écran reste allumé, le minuteur sonne même téléphone verrouillé, et les quantités suivent le nombre de parts.</p>
+        </div>
+        <div class="telephone"><img src="assets/ecran-cuisine.webp" width="390" height="844" loading="lazy" alt="Mode cuisine : étape 02 sur 05 écrite en grand"></div>
+      </div>
+    </article>
+
+    <article class="etape">
+      <div class="large">
+        <div>
+          <p class="numero" aria-hidden="true"><b>04</b></p>
+          <h3 class="titre">Prévoyez la semaine</h3>
+          <p>Choisissez vos plats et le nombre de personnes. Mijote prépare la liste des ingrédients&#8239;; vous la cochez au fil des courses.</p>
+        </div>
+        <div class="telephone"><img src="assets/ecran-menu.webp" width="390" height="844" loading="lazy" alt="Mon menu : trois plats choisis et les ingrédients à prévoir"></div>
+      </div>
+    </article>
   </section>
 
-  <p class="doux">Mijote est éditée par un particulier, à titre non professionnel. Contact : <a href="mailto:vdeapps@gmail.com">vdeapps@gmail.com</a></p>
+  <section class="ingredients-bloc" aria-labelledby="ingredients-titre">
+    <div class="large">
+      <div class="revele">
+        <h2 id="ingredients-titre" class="titre">Sortez les ingrédients.</h2>
+        <p class="aide">Ce qui est déjà dans Mijote, sans rien régler. Cochez au fur et à mesure, comme dans l'application.</p>
+        <div class="compte"><span>Ingrédients</span><span id="compte" aria-live="polite">0 / 8 prêts</span></div>
+        <div class="jauge" id="jauge"><i></i></div>
+        <p class="bravo-liste" id="bravo-liste" aria-live="polite"></p>
+      </div>
+      <ul class="liste revele" id="liste">
+        <li><label><input type="checkbox"><span class="coche"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="#1F1A24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nom">Vos recettes sans réseau</span><span class="qte">toujours</span></label></li>
+        <li><label><input type="checkbox"><span class="coche"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="#1F1A24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nom">Publicité</span><span class="qte">0&nbsp;g</span></label></li>
+        <li><label><input type="checkbox"><span class="coche"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="#1F1A24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nom">Calories par part</span><span class="qte">sans calculer</span></label></li>
+        <li><label><input type="checkbox"><span class="coche"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="#1F1A24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nom">Partage à un proche</span><span class="qte">1 lien ou 1 QR code</span></label></li>
+        <li><label><input type="checkbox"><span class="coche"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="#1F1A24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nom">Vos appareils</span><span class="qte">tous, même compte</span></label></li>
+        <li><label><input type="checkbox"><span class="coche"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="#1F1A24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nom">Export de vos recettes</span><span class="qte">quand vous voulez</span></label></li>
+        <li><label><input type="checkbox"><span class="coche"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="#1F1A24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nom">Corbeille</span><span class="qte">30 jours</span></label></li>
+        <li><label><input type="checkbox"><span class="coche"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="#1F1A24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nom">Thème</span><span class="qte">clair ou sombre</span></label></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="fin" id="fin" aria-labelledby="fin-titre">
+    <div class="large">
+      <div class="assiette-fin" aria-hidden="true">
+        <div class="eclats">
+          <i style="--c:#FF5B3A;--x:-9rem;--y:-5rem;--d:.05s"></i>
+          <i class="losange" style="--c:#2E9E5B;--x:8.5rem;--y:-6.5rem;--d:.1s"></i>
+          <i style="--c:#1F1A24;--x:10rem;--y:2rem;--d:0s"></i>
+          <i class="losange" style="--c:#D63A1C;--x:-10.5rem;--y:3.5rem;--d:.15s"></i>
+          <i style="--c:#FFFFFF;--x:-4rem;--y:-9rem;--d:.08s"></i>
+          <i class="losange" style="--c:#3D8BFF;--x:5rem;--y:8.5rem;--d:.12s"></i>
+          <i style="--c:#2E9E5B;--x:-6.5rem;--y:8rem;--d:.2s"></i>
+          <i class="losange" style="--c:#FFFFFF;--x:3.5rem;--y:-9.5rem;--d:.03s"></i>
+          <i style="--c:#FF5B3A;--x:11rem;--y:-1.5rem;--d:.18s"></i>
+        </div>
+        <svg><use href="#assiette"/></svg>
+      </div>
+      <h2 id="fin-titre" class="titre">Qu'est-ce qu'on Mijote ce soir&#8239;?</h2>
+      <p class="chapeau">Installez Mijote, ajoutez votre première recette, et laissez le papier dans le tiroir.</p>
+      <div class="actions">
+        <a class="play" href="https://play.google.com/store/apps/details?id=fr.vdeapps.mijote.app">
+          <svg aria-hidden="true"><use href="#lecture"/></svg>
+          <span><small>Gratuit, sur</small><strong>Google Play</strong></span>
+        </a>
+        <figure class="qr">
+          <svg class="code" viewBox="0 0 37 37" role="img" aria-label="QR code vers Mijote sur Google Play"><path stroke="#1F1A24" d="M0 0.5h7m1 0h1m4 0h5m1 0h6m1 0h1m3 0h7m-37 1h1m5 0h1m1 0h1m5 0h1m1 0h4m1 0h1m2 0h1m3 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m2 0h1m1 0h1m2 0h4m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m4 0h2m4 0h2m2 0h1m3 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h6m1 0h2m1 0h2m1 0h2m2 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m2 0h1m2 0h5m5 0h2m6 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-26 1h1m5 0h4m2 0h1m1 0h1m1 0h2m-29 1h1m2 0h7m1 0h4m4 0h1m1 0h3m2 0h1m1 0h2m2 0h1m1 0h3m-32 1h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m3 0h2m2 0h2m3 0h5m-33 1h2m1 0h2m7 0h2m2 0h7m1 0h1m1 0h2m1 0h2m2 0h1m-32 1h1m1 0h1m1 0h1m1 0h2m3 0h2m1 0h2m1 0h3m1 0h2m1 0h3m2 0h3m-37 1h2m3 0h2m2 0h1m1 0h1m3 0h1m7 0h2m3 0h1m1 0h1m5 0h1m-35 1h2m1 0h1m1 0h2m3 0h5m1 0h1m2 0h1m1 0h2m1 0h3m3 0h2m-31 1h2m1 0h3m1 0h1m2 0h4m1 0h2m7 0h1m1 0h2m1 0h5m-37 1h1m1 0h1m1 0h2m6 0h1m7 0h3m3 0h2m1 0h3m1 0h4m-36 1h2m1 0h4m2 0h1m2 0h2m2 0h2m2 0h2m2 0h1m1 0h1m2 0h1m3 0h2m-36 1h3m6 0h1m1 0h1m5 0h1m3 0h2m2 0h1m1 0h3m1 0h1m1 0h1m-33 1h4m1 0h3m2 0h1m4 0h2m1 0h1m3 0h1m1 0h1m1 0h1m3 0h1m2 0h1m1 0h1m-37 1h2m2 0h1m2 0h1m2 0h1m2 0h1m1 0h2m1 0h3m1 0h1m1 0h4m2 0h1m1 0h2m2 0h1m-36 1h1m2 0h1m1 0h1m1 0h1m3 0h3m1 0h2m1 0h2m3 0h1m1 0h8m-33 1h1m1 0h1m5 0h1m2 0h4m1 0h3m3 0h1m1 0h3m4 0h1m1 0h1m-32 1h4m1 0h1m1 0h1m1 0h1m2 0h2m4 0h1m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m2 0h1m-37 1h1m4 0h1m1 0h2m1 0h1m3 0h1m1 0h1m1 0h1m7 0h2m2 0h5m-35 1h4m2 0h3m1 0h1m2 0h1m3 0h1m1 0h4m1 0h1m5 0h1m-31 1h1m1 0h2m1 0h1m2 0h1m1 0h1m1 0h2m4 0h2m2 0h2m1 0h1m1 0h3m2 0h2m-34 1h2m2 0h5m1 0h1m1 0h1m1 0h2m6 0h1m1 0h5m1 0h4m1 0h2m-37 1h1m1 0h1m2 0h1m2 0h7m1 0h1m2 0h1m2 0h2m4 0h4m1 0h3m-36 1h1m2 0h2m1 0h6m3 0h1m3 0h2m1 0h1m1 0h9m1 0h3m-29 1h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h4m5 0h1m3 0h1m1 0h1m-35 1h7m1 0h2m3 0h3m1 0h3m3 0h1m1 0h1m2 0h1m1 0h1m1 0h1m2 0h2m-37 1h1m5 0h1m1 0h2m1 0h1m1 0h2m6 0h1m1 0h4m1 0h1m3 0h1m2 0h1m-36 1h1m1 0h3m1 0h1m1 0h1m2 0h2m1 0h3m1 0h1m1 0h2m2 0h1m1 0h7m3 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h5m5 0h1m1 0h9m3 0h1m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h5m3 0h1m3 0h3m1 0h1m1 0h2m3 0h3m1 0h1m-37 1h1m5 0h1m5 0h1m2 0h1m1 0h2m4 0h1m3 0h1m1 0h2m1 0h1m1 0h3m-37 1h7m1 0h2m3 0h2m1 0h1m2 0h2m1 0h3m3 0h4m1 0h1m2 0h1"/></svg>
+          <figcaption>Visez ce code avec votre téléphone.</figcaption>
+        </figure>
+      </div>
+    </div>
+    <footer class="pied">
+      <div class="large">
+        <nav aria-label="Vos données">
+          <a href="confidentialite/">Politique de confidentialité</a>
+          <a href="suppression-compte/">Supprimer mon compte</a>
+          <a href="mailto:vdeapps@gmail.com">vdeapps@gmail.com</a>
+        </nav>
+        <p>Mijote est éditée par un particulier, à titre non professionnel. Calories estimées avec la table Ciqual 2025 de l'Anses&#8239;; données produits Open Food Facts.</p>
+      </div>
+    </footer>
+  </section>
 </main>
+<script src="assets/mijote.js"></script>
 </body>
 </html>
