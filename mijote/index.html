@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#FFC233">
 <title>Mijote, le carnet de recettes simple pour Android</title>
@@ -16,9 +16,9 @@
 
   :root {
     --encre: #1F1A24; --encre-2: #5E5566; --encre-safran: #4A4252; --sol: #FFFCF7; --surface: #FFFFFF; --trait: #F1E8DC;
-    --safran: #FFC233; --safran-clair: #FFD866; --safran-encre: #5C4400;
+    --safran: #FFC233; --safran-clair: #FFD866;
     --tomate: #FF5B3A; --tomate-fonce: #D63A1C; --basilic: #2E9E5B; --basilic-fonce: #1E6B42;
-    --peche: #FFD9C7; --peche-2: #FFC6AC; --peche-encre: #A3341A;
+    --peche: #FFD9C7; --peche-2: #FFC6AC;
     --menthe: #CDEFD8; --lilas: #E6DBFF; --beurre: #FFE9A8; --ciel: #CFE6FF;
     --papier: #F4E6C8; --papier-encre: #2D3A6B;
     --sortie: cubic-bezier(.16, 1, .3, 1);
@@ -55,7 +55,7 @@
   }
   .play:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(31, 26, 36, .6); }
   .play:active { transform: translateY(0) scale(.97); transition-duration: .1s; }
-  .play:focus-visible { outline-color: var(--encre); outline-offset: 4px; border-radius: 999px; }
+  .play:focus-visible { outline-offset: 4px; border-radius: 999px; }
   .play svg { flex: none; width: 2.6rem; height: 2.6rem; }
   .play span { display: grid; line-height: 1.15; }
   .play small { font-size: .8rem; font-weight: 500; color: #CFC7D6; }
@@ -119,7 +119,7 @@
     background: linear-gradient(225deg, var(--safran) 50%, #E3CC9F 50%, #F2E2BE);
     box-shadow: -3px 3px 6px rgba(92, 68, 0, .18);
   }
-  .papier h2 { font: inherit; font-size: 1.3em; margin: 0 0 .1em; transform: rotate(-2deg); }
+  .papier .plat { font: inherit; font-size: 1.3em; margin: 0 0 .1em; transform: rotate(-2deg); }
   .papier p, .papier ul { margin: 0; padding: 0; list-style: none; }
   .papier .pour { margin-left: 4.5em; transform: rotate(-1deg); opacity: .85; }
   .papier li { transform: rotate(-.6deg); }
@@ -134,7 +134,7 @@
     font-size: .8em; padding: .25em .7em; border-radius: 999px; font-variation-settings: "FLAR" 100;
   }
   .appli-corps { padding: 1em 1.2em 1.2em; }
-  .appli h2 { font-size: 1.45em; margin: 0 0 .25em; }
+  .appli .plat { font-size: 1.45em; margin: 0 0 .25em; }
   .meta { display: flex; align-items: center; gap: .4em; font-size: .88em; font-weight: 600; color: var(--encre-2); margin: 0 0 .85em; font-variant-numeric: tabular-nums; }
   .meta svg { width: 1em; height: 1em; }
   .ingredients { list-style: none; margin: 0; padding: 0; display: grid; gap: .4em; }
@@ -216,7 +216,7 @@
   .compte { display: flex; justify-content: space-between; font-weight: 750; margin-bottom: .6rem; font-variant-numeric: tabular-nums; }
   .jauge { height: .55rem; border-radius: 999px; background: rgba(255, 255, 255, .16); overflow: hidden; }
   .jauge i { display: block; height: 100%; width: calc(var(--fait, 0) * 100%); background: var(--safran); border-radius: inherit; transition: width .6s var(--sortie); }
-  .bravo-liste { min-height: 1.6em; margin: 1.25rem 0 0; font-weight: 750; color: var(--safran); }
+  .bravo-liste { min-height: 1.6em; margin: 1.25rem 0 0; font-weight: 750; color: #FFE08A; }
   .liste { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
   .liste label {
     display: flex; align-items: center; gap: 1rem; padding: .95rem 1.2rem; border-radius: 1.1rem; cursor: pointer;
@@ -249,6 +249,7 @@
   .pied .large { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1.5rem 3rem; }
   .pied nav { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; }
   .pied a { color: #fff; }
+  .pied :focus-visible, .play:focus-visible { outline-color: var(--safran); }
   .pied p { margin: 0; max-width: 52ch; }
 
   /* ---------- Mise en page étroite ---------- */
@@ -270,6 +271,9 @@
     .ingredients li { font-size: .8rem; }
   }
 
+  html:not(.js) .fiche input, html:not(.js) .poignee, html:not(.js) .fiche figcaption,
+  html:not(.js) .compte, html:not(.js) .jauge { display: none; }
+
   /* ---------- Mouvement (seulement si le téléphone l'accepte et si le script tourne) ---------- */
   @media (prefers-reduced-motion: no-preference) {
     .anime .ouverture .entree { opacity: 0; translate: 0 1.6rem; animation: monte .9s var(--sortie) forwards; animation-delay: calc(var(--i, 0) * 90ms + 100ms); }
@@ -287,8 +291,8 @@
     .anime .etape .numero b { display: inline-block; clip-path: inset(100% 0 0 0); translate: 0 .3em; transition: clip-path .9s var(--sortie), translate .9s var(--sortie); }
     .anime .etape.vu .numero b { clip-path: inset(-10% 0 -10% 0); translate: 0 0; }
 
-    .eclats i { opacity: 0; translate: -50% -50%; }
-    .fin.vu .eclats i { animation: eclat 1.4s var(--sortie) forwards; animation-delay: var(--d, 0s); }
+    .anime .eclats i { opacity: 0; translate: -50% -50%; }
+    .anime .fin.vu .eclats i { animation: eclat 1.4s var(--sortie) forwards; animation-delay: var(--d, 0s); }
     @keyframes eclat {
       0% { opacity: 0; translate: -50% -50%; scale: .3; }
       20% { opacity: 1; }
@@ -351,10 +355,10 @@
     </div>
 
     <figure class="fiche" id="fiche">
-      <input type="range" min="0" max="100" value="55" step="1" aria-label="Mettre la recette au propre : à gauche la fiche Mijote, à droite le papier d'origine">
+      <input type="range" min="0" max="100" value="55" step="1" aria-valuetext="55 % de la recette au propre" aria-label="Mettre la recette au propre : à gauche la fiche Mijote, à droite le papier d'origine">
       <div class="fiche-cadre">
         <div class="face papier" aria-hidden="true">
-          <h2>Tarte fine aux tomates</h2>
+          <p class="plat">Tarte fine aux tomates</p>
           <p class="pour">pour 4 (celle de Mamie)</p>
           <ul>
             <li>1 pâte feuilletée</li>
@@ -367,10 +371,10 @@
           </ul>
           <p class="note">pas trop cuite</p>
         </div>
-        <div class="face appli">
+        <div class="face appli" aria-hidden="true">
           <div class="vignette"><span class="etiquette">Végé</span><svg aria-hidden="true"><use href="#assiette"/></svg></div>
           <div class="appli-corps">
-            <h2 class="titre">Tarte fine aux tomates</h2>
+            <p class="titre plat">Tarte fine aux tomates</p>
             <p class="meta"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>55&nbsp;min · 4&nbsp;pers.</p>
             <ul class="ingredients">
               <li>Pâte feuilletée <b>1 pièce</b></li>
@@ -470,7 +474,7 @@
     </div>
   </section>
 
-  <section class="fin" id="fin" aria-labelledby="fin-titre">
+  <section class="fin" aria-labelledby="fin-titre">
     <div class="large">
       <div class="assiette-fin" aria-hidden="true">
         <div class="eclats">

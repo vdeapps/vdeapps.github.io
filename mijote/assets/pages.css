@@ -22,7 +22,7 @@ body {
 }
 ::selection { background: var(--safran); color: var(--encre); }
 a { color: var(--lien); text-underline-offset: .2em; text-decoration-thickness: .08em; }
-:focus-visible { outline: 3px solid var(--safran); outline-offset: 3px; border-radius: 6px; }
+:focus-visible { outline: 3px solid var(--texte); outline-offset: 3px; border-radius: 6px; }
 .titre { font-weight: 850; font-variation-settings: "FLAR" 100; letter-spacing: -.025em; line-height: 1; text-wrap: balance; }
 .large { width: min(100% - 2rem, 46rem); margin-inline: auto; }
 
@@ -80,7 +80,7 @@ input {
   border: 2px solid var(--trait); border-radius: 1rem; background: #fff; transition: border-color .2s;
 }
 input:focus { border-color: var(--encre); outline: none; }
-input:focus-visible { outline: 3px solid var(--safran); outline-offset: 2px; }
+input:focus-visible { outline: 3px solid var(--encre); outline-offset: 2px; }
 [hidden] { display: none !important; }
 
 /* ---------- Pied ---------- */
@@ -88,6 +88,7 @@ input:focus-visible { outline: 3px solid var(--safran); outline-offset: 2px; }
 .pied .large { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2.5rem; width: min(100% - 2rem, 76rem); }
 .pied nav { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; }
 .pied a { color: #fff; }
+.pied :focus-visible { outline-color: var(--safran); }
 .pied p { margin: 0; max-width: 52ch; }
 
 @media (max-width: 520px) { .installer { display: none; } }

@@ -3,16 +3,21 @@
 (function () {
   'use strict';
 
+  var racine = document.documentElement;
   var calme = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!calme) document.documentElement.classList.add('anime');
+  racine.classList.add('js');
+  if (!calme) racine.classList.add('anime');
+  // En cas d'erreur plus bas, tout redevient visible et immobile.
+  window.addEventListener('error', function () { racine.classList.remove('anime'); });
 
   // ---------- Curseur papier / Mijote ----------
   var fiche = document.getElementById('fiche');
-  if (fiche) {
-    var curseur = fiche.querySelector('input');
+  var curseur = fiche && fiche.querySelector('input');
+  if (curseur) {
     var poser = function (v) { fiche.style.setProperty('--coupe', v + '%'); };
+    var annoncer = function () { curseur.setAttribute('aria-valuetext', curseur.value + '\u00a0% de la recette au propre'); };
     var touche = false;
-    curseur.addEventListener('input', function () { touche = true; poser(curseur.value); });
+    curseur.addEventListener('input', function () { touche = true; poser(curseur.value); annoncer(); });
     poser(curseur.value);
 
     // Démonstration, une seule fois : le papier passe au propre puis la fiche s'arrête à mi-chemin.
@@ -53,11 +58,11 @@
 
   // ---------- Liste des ingrédients ----------
   var liste = document.getElementById('liste');
-  if (liste) {
+  var compte = document.getElementById('compte');
+  var jauge = document.getElementById('jauge');
+  var bravo = document.getElementById('bravo-liste');
+  if (liste && compte && jauge && bravo) {
     var cases = liste.querySelectorAll('input');
-    var compte = document.getElementById('compte');
-    var jauge = document.getElementById('jauge');
-    var bravo = document.getElementById('bravo-liste');
     var majListe = function () {
       var n = 0;
       cases.forEach(function (c) { if (c.checked) n += 1; });
