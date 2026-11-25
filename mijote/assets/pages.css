@@ -1,0 +1,99 @@
+/* Thème commun des pages secondaires de Mijote (confidentialité, suppression du compte, lien de partage).
+   Mêmes couleurs, police et bandeau que la page d'accueil (web/index.html). */
+@font-face { font-family: "Commissioner"; src: url("commissioner.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --encre: #1F1A24; --encre-2: #5E5566; --encre-safran: #4A4252; --sol: #FFFCF7; --carte: #FFF1CC; --trait: #F1E8DC;
+  --safran: #FFC233; --safran-clair: #FFD866; --tomate-fonce: #D63A1C; --lien: #B5311A;
+  --texte: var(--encre); --texte-2: var(--encre-2);
+  --sortie: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --sol: #17131B; --carte: #241E2A; --trait: #352D3C; --texte: #F6F0EA; --texte-2: #CFC7D6; --lien: #FF8A70; color-scheme: dark; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--sol); color: var(--texte);
+  font: 400 1.125rem/1.65 Commissioner, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  display: flex; flex-direction: column; min-height: 100vh;
+}
+::selection { background: var(--safran); color: var(--encre); }
+a { color: var(--lien); text-underline-offset: .2em; text-decoration-thickness: .08em; }
+:focus-visible { outline: 3px solid var(--safran); outline-offset: 3px; border-radius: 6px; }
+.titre { font-weight: 850; font-variation-settings: "FLAR" 100; letter-spacing: -.025em; line-height: 1; text-wrap: balance; }
+.large { width: min(100% - 2rem, 46rem); margin-inline: auto; }
+
+/* ---------- Bandeau ---------- */
+.bandeau { background: var(--safran); color: var(--encre); position: relative; overflow: hidden; isolation: isolate; }
+.bandeau::before {
+  content: ""; position: absolute; z-index: -1; width: 34rem; aspect-ratio: 1; border-radius: 50%;
+  background: var(--safran-clair); right: -12rem; top: -16rem;
+}
+.bandeau :focus-visible { outline-color: var(--encre); }
+.barre { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.25rem; width: min(100% - 2rem, 76rem); margin-inline: auto; }
+.marque { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--encre); font-size: 1.5rem; }
+.marque img { width: 2.4rem; height: 2.4rem; border-radius: .7rem; }
+.installer {
+  font-weight: 700; text-decoration: none; color: var(--encre); padding: .5rem 1.1rem; border-radius: 999px;
+  border: 2px solid var(--encre); transition: background .25s, color .25s; white-space: nowrap;
+}
+.installer:hover { background: var(--encre); color: var(--safran); }
+.bandeau h1 { font-size: clamp(2.3rem, 6.4vw, 4.25rem); margin: 0; padding-block: clamp(1.5rem, 4vw, 2.5rem) .75rem; max-width: 16ch; }
+.bandeau .chapeau { margin: 0; padding-bottom: clamp(2.5rem, 6vw, 4rem); color: var(--encre-safran); font-weight: 550; max-width: 40ch; }
+
+/* ---------- Contenu ---------- */
+main.large { flex: 1; padding-block: clamp(2.5rem, 6vw, 4rem) clamp(4rem, 8vw, 6rem); }
+main h2 { font-size: clamp(1.45rem, 2.8vw, 1.95rem); margin: 2.75rem 0 .75rem; }
+main h2:first-child { margin-top: 0; }
+main p, main li { max-width: 68ch; }
+main ul { padding-left: 1.25rem; }
+main li { margin-block: .3rem; }
+main li::marker { color: var(--tomate-fonce); }
+.doux { color: var(--texte-2); font-size: 1rem; }
+.carte { background: var(--carte); border-radius: 1.5rem; padding: clamp(1.25rem, 3vw, 1.75rem); margin: 1.5rem 0; }
+.carte > :first-child { margin-top: 0; }
+.carte > :last-child { margin-bottom: 0; }
+
+.tableau { overflow-x: auto; margin: 1rem 0; }
+table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+th, td { text-align: left; vertical-align: top; padding: .65rem .75rem; border-bottom: 1px solid var(--trait); }
+thead th { font-weight: 800; border-bottom: 2px solid var(--texte); }
+
+/* ---------- Boutons et formulaires ---------- */
+.bouton, button {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: .75rem 1.5rem;
+  border: 0; border-radius: 999px; font: inherit; font-weight: 750; text-decoration: none; cursor: pointer;
+  background: var(--encre); color: #fff; transition: transform .3s var(--sortie);
+}
+@media (prefers-color-scheme: dark) { .bouton, button { background: var(--safran); color: var(--encre); } }
+.bouton:hover, button:hover:not(:disabled) { transform: translateY(-2px); }
+.bouton:active, button:active:not(:disabled) { transform: scale(.97); }
+.bouton.contour { background: none; color: var(--texte); box-shadow: inset 0 0 0 2px currentColor; }
+button.danger { background: var(--tomate-fonce); color: #fff; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+label { display: block; font-weight: 700; margin: 1rem 0 .35rem; }
+input {
+  width: 100%; min-height: 3rem; padding: .55rem 1rem; font: inherit; color: var(--encre);
+  border: 2px solid var(--trait); border-radius: 1rem; background: #fff; transition: border-color .2s;
+}
+input:focus { border-color: var(--encre); outline: none; }
+input:focus-visible { outline: 3px solid var(--safran); outline-offset: 2px; }
+[hidden] { display: none !important; }
+
+/* ---------- Pied ---------- */
+.pied { background: var(--encre); color: #CFC7D6; padding-block: 2.25rem; font-size: .98rem; }
+.pied .large { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2.5rem; width: min(100% - 2rem, 76rem); }
+.pied nav { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; }
+.pied a { color: #fff; }
+.pied p { margin: 0; max-width: 52ch; }
+
+@media (max-width: 520px) { .installer { display: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .bandeau h1, .bandeau .chapeau { animation: monte .8s var(--sortie) both; }
+  .bandeau .chapeau { animation-delay: .08s; }
+  @keyframes monte { from { opacity: 0; translate: 0 1rem; } }
+}
+.bandeau h1:last-child { padding-bottom: clamp(2.5rem, 6vw, 4rem); }

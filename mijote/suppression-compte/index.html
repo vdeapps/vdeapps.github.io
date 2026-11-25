@@ -3,35 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src https: http://127.0.0.1:55321 http://localhost:55321; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src https: http://127.0.0.1:55321 http://localhost:55321; base-uri 'none'; form-action 'none'">
 <meta name="supabase-url" content="https://newakwkubtfsndhbyvcq.supabase.co">
 <meta name="supabase-anon" content="sb_publishable_BGqnc9Ql3_QskhVqj0uD9g_3MeHURpQ">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Supprimer mon compte Mijote</title>
-<style>
-  :root { --encre:#1f1a17; --papier:#fbf6ec; --tomate:#d9432b; --safran:#f2a516; --trait:#e4dccb; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--papier); color:var(--encre); font:18px/1.55 Figtree, system-ui, sans-serif; }
-  main { max-width:36rem; margin:0 auto; padding:2rem 1rem 4rem; }
-  h1 { font:700 2rem/1.15 "Bricolage Grotesque", Figtree, system-ui, sans-serif; margin:0 0 1rem; }
-  section { background:#fff; border:1px solid var(--trait); border-radius:16px; padding:1.25rem; margin:1.25rem 0; }
-  label { display:block; font-weight:600; margin:.75rem 0 .25rem; }
-  input { width:100%; min-height:48px; padding:.5rem .75rem; font:inherit; border:2px solid var(--encre); border-radius:12px; background:#fff; }
-  button { min-height:48px; margin-top:1rem; padding:.5rem 1.25rem; font:inherit; font-weight:700; border:0; border-radius:999px; background:var(--encre); color:#fff; cursor:pointer; }
-  button.danger { background:var(--tomate); }
-  button:disabled { opacity:.5; cursor:not-allowed; }
-  :focus-visible { outline:3px solid var(--safran); outline-offset:2px; }
-  [role=status] { margin-top:1rem; font-weight:600; }
-  [hidden] { display:none; }
-  a { color:var(--tomate); }
-</style>
+<link rel="stylesheet" href="../assets/pages.css">
 </head>
 <body>
-<main>
-  <h1>Supprimer votre compte Mijote</h1>
+<header class="bandeau">
+  <div class="barre">
+    <a class="marque titre" href="../"><img src="../assets/logo.svg" width="38" height="38" alt="">Mijote</a>
+    <a class="installer" href="https://play.google.com/store/apps/details?id=fr.vdeapps.mijote.app">Installer</a>
+  </div>
+  <div class="large">
+    <h1 class="titre">Supprimer votre compte Mijote</h1>
+  </div>
+</header>
+<main class="large">
   <p>Mijote est un carnet de recettes pour Android, édité par un particulier, à titre non professionnel. Vous pouvez supprimer votre compte depuis l'application (Profil, puis Supprimer mon compte) ou depuis cette page, sans réinstaller l'application.</p>
 
-  <section aria-labelledby="effets">
+  <section class="carte" aria-labelledby="effets">
     <h2 id="effets">Ce qui sera supprimé</h2>
     <ul>
       <li>Votre compte : adresse e-mail, mot de passe, nom et photo de profil.</li>
@@ -44,7 +36,7 @@
     <p>Une question ? Écrivez à <a href="mailto:vdeapps@gmail.com">vdeapps@gmail.com</a>. Détails dans notre <a href="../confidentialite/">politique de confidentialité</a>.</p>
   </section>
 
-  <section id="etape-connexion" aria-labelledby="t1">
+  <section class="carte" id="etape-connexion" aria-labelledby="t1">
     <h2 id="t1">1. Vérifiez votre adresse e-mail</h2>
     <p>Nous vous envoyons un lien de connexion à usage unique.</p>
     <form id="form-lien">
@@ -54,7 +46,7 @@
     </form>
   </section>
 
-  <section id="etape-suppression" aria-labelledby="t2" hidden>
+  <section class="carte" id="etape-suppression" aria-labelledby="t2" hidden>
     <h2 id="t2">2. Confirmez la suppression</h2>
     <form id="form-suppression">
       <label for="confirmation">Saisissez SUPPRIMER pour confirmer</label>
@@ -65,6 +57,17 @@
 
   <p id="message" role="status" aria-live="polite"></p>
 </main>
+<footer class="pied">
+  <div class="large">
+    <nav aria-label="Mijote">
+      <a href="../">Accueil</a>
+      <a href="../confidentialite/">Politique de confidentialité</a>
+      <a href="../suppression-compte/">Supprimer mon compte</a>
+      <a href="mailto:vdeapps@gmail.com">vdeapps@gmail.com</a>
+    </nav>
+    <p>Mijote est éditée par un particulier, à titre non professionnel.</p>
+  </div>
+</footer>
 
 <script type="module" src="suppression-compte.js"></script>
 </body>

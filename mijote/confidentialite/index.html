@@ -3,40 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Politique de confidentialité de Mijote</title>
 <!-- Source : docs/publication/politique-confidentialite.md (les deux textes restent identiques). -->
-<style>
-  :root { --encre:#1f1a17; --papier:#fbf6ec; --carte:#fff; --tomate:#b8361f; --safran:#f2a516; --trait:#e4dccb; --doux:#5a514b; }
-  @media (prefers-color-scheme: dark) {
-    :root { --encre:#f4ede2; --papier:#1b1714; --carte:#26211d; --tomate:#ff8a70; --trait:#3d3530; --doux:#c9bfb3; }
-  }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--papier); color:var(--encre); font:18px/1.6 Figtree, system-ui, sans-serif; }
-  main { max-width:44rem; margin:0 auto; padding:2rem 1rem 4rem; }
-  h1 { font:700 2rem/1.15 "Bricolage Grotesque", Figtree, system-ui, sans-serif; margin:0 0 .5rem; }
-  h2 { font:700 1.35rem/1.25 "Bricolage Grotesque", Figtree, system-ui, sans-serif; margin:2rem 0 .5rem; }
-  .date { color:var(--doux); margin:0 0 1.5rem; }
-  section.bref { background:var(--carte); border:1px solid var(--trait); border-radius:16px; padding:1rem 1.25rem; }
-  .tableau { overflow-x:auto; }
-  table { width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.95rem; }
-  th, td { text-align:left; vertical-align:top; padding:.5rem; border-bottom:1px solid var(--trait); }
-  th { font-weight:700; }
-  a { color:var(--tomate); }
-  :focus-visible { outline:3px solid var(--safran); outline-offset:2px; }
-  .a-completer { background:#fff3c4; color:#1f1a17; padding:0 .25rem; border-radius:4px; }
-  strong { font-weight:700; }
-</style>
+<link rel="stylesheet" href="../assets/pages.css">
 </head>
 <body>
-<main>
-  <h1>Politique de confidentialité de Mijote</h1>
-  <p class="date">Dernière mise à jour : 24 novembre 2026</p>
+<header class="bandeau">
+  <div class="barre">
+    <a class="marque titre" href="../"><img src="../assets/logo.svg" width="38" height="38" alt="">Mijote</a>
+    <a class="installer" href="https://play.google.com/store/apps/details?id=fr.vdeapps.mijote.app">Installer</a>
+  </div>
+  <div class="large">
+    <h1 class="titre">Politique de confidentialité de Mijote</h1>
+    <p class="chapeau">Dernière mise à jour : 24 novembre 2026</p>
+  </div>
+</header>
+<main class="large">
 
   <p>Mijote est un carnet de recettes pour téléphone Android. Cette page explique, en mots simples, quelles informations Mijote enregistre, pourquoi, où, combien de temps, et comment les retrouver ou les effacer.</p>
 
-  <section class="bref" aria-labelledby="bref">
+  <section class="carte" aria-labelledby="bref">
     <h2 id="bref">En bref</h2>
     <ul>
       <li>Vos recettes et vos photos sont enregistrées pour que vous les retrouviez sur tous vos appareils.</li>
@@ -184,5 +172,16 @@
   <h2 id="modifications">13. Modifications</h2>
   <p>Si cette politique change, la nouvelle version est publiée sur cette page avec sa date de mise à jour.</p>
 </main>
+<footer class="pied">
+  <div class="large">
+    <nav aria-label="Mijote">
+      <a href="../">Accueil</a>
+      <a href="../confidentialite/">Politique de confidentialité</a>
+      <a href="../suppression-compte/">Supprimer mon compte</a>
+      <a href="mailto:vdeapps@gmail.com">vdeapps@gmail.com</a>
+    </nav>
+    <p>Mijote est éditée par un particulier, à titre non professionnel.</p>
+  </div>
+</footer>
 </body>
 </html>

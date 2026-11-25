@@ -1,0 +1,15 @@
+<svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect width="108" height="108" fill="#FFF7EE"/>
+  <circle cx="55.5" cy="56.5" r="31" fill="#1F1A24" opacity=".10"/>
+  <circle cx="54" cy="54" r="31" fill="#FFFFFF"/>
+  <circle cx="54" cy="54" r="24" fill="#FFF7EE"/>
+  <defs><g id="tranche">
+    <circle r="9" fill="#D9341E"/><circle r="7.3" fill="#FF6146"/>
+    <circle cx="-3" cy="-2.2" r="1.1" fill="#FFC9A0"/><circle cx="3" cy="-2.6" r="1.1" fill="#FFC9A0"/>
+    <circle cx="-2.4" cy="3" r="1.1" fill="#FFC9A0"/><circle cx="3.2" cy="2.6" r="1.1" fill="#FFC9A0"/>
+  </g></defs>
+  <use xlink:href="#tranche" x="46" y="51"/><use xlink:href="#tranche" x="61.5" y="53.5"/><use xlink:href="#tranche" x="52.5" y="64"/>
+  <g transform="translate(60 41) rotate(-28)"><ellipse rx="7.5" ry="3.4" fill="#2E9E5B"/><path d="M-6 0H6" stroke="#1E6B42" stroke-width=".8"/></g>
+  <g transform="translate(67.5 45.5) rotate(18)"><ellipse rx="6.5" ry="3" fill="#3FAE6A"/><path d="M-5 0H5" stroke="#1E6B42" stroke-width=".8"/></g>
+  <circle cx="40" cy="63" r=".9" fill="#7A4A2E"/><circle cx="68" cy="64" r=".9" fill="#7A4A2E"/><circle cx="43" cy="42" r=".8" fill="#7A4A2E"/>
+</svg>
