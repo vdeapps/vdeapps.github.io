@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Une recette à ouvrir dans Mijote</title>
+<style>
+  :root { --encre:#1f1a17; --papier:#fbf6ec; --carte:#fff; --tomate:#b8361f; --safran:#f2a516; --trait:#e4dccb; --doux:#5a514b; }
+  @media (prefers-color-scheme: dark) {
+    :root { --encre:#f4ede2; --papier:#1b1714; --carte:#26211d; --tomate:#ff8a70; --trait:#3d3530; --doux:#c9bfb3; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--papier); color:var(--encre); font:18px/1.6 Figtree, system-ui, sans-serif; }
+  main { max-width:44rem; margin:0 auto; padding:2rem 1rem 4rem; }
+  h1 { font:700 2rem/1.15 "Bricolage Grotesque", Figtree, system-ui, sans-serif; margin:0 0 1rem; }
+  h2 { font:700 1.35rem/1.25 "Bricolage Grotesque", Figtree, system-ui, sans-serif; margin:2rem 0 .5rem; }
+  section { background:var(--carte); border:1px solid var(--trait); border-radius:16px; padding:1rem 1.25rem; margin:1rem 0; }
+  .bouton { display:block; min-height:48px; padding:.75rem 1.25rem; border-radius:999px; text-align:center; font-weight:700; text-decoration:none; margin:.75rem 0; }
+  .principal { background:var(--tomate); color:#fff; }
+  .secondaire { border:2px solid var(--tomate); color:var(--tomate); }
+  @media (prefers-color-scheme: dark) { .principal { color:#1b1714; } }
+  .doux { color:var(--doux); font-size:.95rem; }
+  a { color:var(--tomate); }
+  :focus-visible { outline:3px solid var(--safran); outline-offset:2px; }
+  .a-completer { background:#fff3c4; color:#1f1a17; padding:0 .25rem; border-radius:4px; }
+  [hidden] { display:none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ce lien ouvre une recette dans Mijote</h1>
+  <p>Quelqu'un vous a envoyé une recette. Mijote est un carnet de recettes pour téléphone Android : c'est l'application qui affiche la recette et vous permet de l'ajouter à votre carnet.</p>
+
+  <section aria-labelledby="installee">
+    <h2 id="installee">Mijote est déjà sur votre téléphone ?</h2>
+    <p>Appuyez sur le bouton pour ouvrir la recette dans l'application.</p>
+    <a id="ouvrir" class="bouton principal" href="#" hidden>Ouvrir dans Mijote</a>
+    <p id="sans-code" class="doux">Ce lien semble incomplet. Demandez à la personne de vous renvoyer la recette, ou, dans Mijote, choisissez « + » puis « Importer » et collez le lien reçu.</p>
+  </section>
+
+  <section aria-labelledby="absente">
+    <h2 id="absente">Vous n'avez pas encore Mijote ?</h2>
+    <p>Installez l'application gratuitement, puis revenez appuyer sur ce lien.</p>
+    <a class="bouton secondaire" href="https://play.google.com/store/apps/details?id=fr.vdeapps.mijote.app">Installer Mijote sur Google Play</a>
+  </section>
+
+  <p class="doux">Une recette partagée reste disponible 1 mois. Passé ce délai, demandez un nouveau lien.</p>
+  <p class="doux">Cette page ne contient ni publicité ni traqueur. Le code du lien reste dans votre navigateur : il n'est envoyé à personne par cette page. <a id="confidentialite" href="../confidentialite/">Politique de confidentialité</a></p>
+</main>
+<script>
+  // Lit le code dans l'adresse (<chemin du site>/r/<code>, ex. /mijote/r/<code> sur GitHub Pages) et prépare
+  // l'ouverture de l'application. Rien n'est envoyé. Page servie aussi comme 404.html à la racine du site.
+  (function () {
+    var m = /^((?:\/[^\/]+)*?)\/r\/([A-Za-z0-9_-]{22})\/?$/.exec(location.pathname);
+    if (!m) return;
+    document.getElementById("confidentialite").href = m[1] + "/confidentialite/";
+    document.getElementById("ouvrir").href =
+      "intent://" + location.host + m[1] + "/r/" + m[2] + "#Intent;scheme=https;package=fr.vdeapps.mijote.app;end";
+    document.getElementById("ouvrir").hidden = false;
+    document.getElementById("sans-code").hidden = true;
+  })();
+</script>
+</body>
+</html>

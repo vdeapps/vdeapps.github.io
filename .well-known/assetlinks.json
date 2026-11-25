@@ -1,0 +1,28 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "fr.vdeapps.mijote.app",
+      "sha256_cert_fingerprints": [
+        "2D:58:F3:9C:A7:FC:AD:9C:D8:6D:12:A9:5F:A1:67:6D:D6:34:9F:39:4A:4C:0D:32:9D:58:C5:CD:78:53:9B:95",
+        "4B:FE:24:49:08:8F:61:B5:25:1F:2D:C8:7A:59:F7:1B:98:F3:21:9F:62:85:68:EE:8A:72:4F:98:4F:6A:D6:04",
+        "35:70:C3:D4:AF:81:F1:BC:E1:4C:93:83:58:1E:32:6C:CD:BE:74:44:16:2A:95:D2:11:D6:28:66:02:06:10:37"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "fr.vdeapps.mijote.app.dev",
+      "sha256_cert_fingerprints": [
+        "B5:F2:8B:B2:8B:16:9C:FE:94:E9:05:10:72:E0:8B:6F:85:4A:49:66:1D:54:AD:CE:20:4D:CA:D7:C2:E5:0F:06"
+      ]
+    }
+  }
+]

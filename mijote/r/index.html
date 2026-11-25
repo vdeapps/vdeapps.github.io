@@ -48,15 +48,17 @@
   </section>
 
   <p class="doux">Une recette partagée reste disponible 1 mois. Passé ce délai, demandez un nouveau lien.</p>
-  <p class="doux">Cette page ne contient ni publicité ni traqueur. Le code du lien reste dans votre navigateur : il n'est envoyé à personne par cette page. <a href="../confidentialite/">Politique de confidentialité</a></p>
+  <p class="doux">Cette page ne contient ni publicité ni traqueur. Le code du lien reste dans votre navigateur : il n'est envoyé à personne par cette page. <a id="confidentialite" href="../confidentialite/">Politique de confidentialité</a></p>
 </main>
 <script>
-  // Lit le code dans l'adresse (/r/<code>) et prépare l'ouverture de l'application. Rien n'est envoyé.
+  // Lit le code dans l'adresse (<chemin du site>/r/<code>, ex. /mijote/r/<code> sur GitHub Pages) et prépare
+  // l'ouverture de l'application. Rien n'est envoyé. Page servie aussi comme 404.html à la racine du site.
   (function () {
-    var m = /^\/r\/([A-Za-z0-9_-]{22})\/?$/.exec(location.pathname);
+    var m = /^((?:\/[^\/]+)*?)\/r\/([A-Za-z0-9_-]{22})\/?$/.exec(location.pathname);
     if (!m) return;
+    document.getElementById("confidentialite").href = m[1] + "/confidentialite/";
     document.getElementById("ouvrir").href =
-      "intent://" + location.host + "/r/" + m[1] + "#Intent;scheme=https;package=fr.vdeapps.mijote.app;end";
+      "intent://" + location.host + m[1] + "/r/" + m[2] + "#Intent;scheme=https;package=fr.vdeapps.mijote.app;end";
     document.getElementById("ouvrir").hidden = false;
     document.getElementById("sans-code").hidden = true;
   })();
